@@ -11,6 +11,7 @@ export default class ProductPage extends Component {
             loaisp: [],
             selectloai: 'all',
             tensp: '',
+            isShowInfoProduct: false,
             listSearch: [],
             isShowSearch: false
         }
@@ -22,6 +23,8 @@ export default class ProductPage extends Component {
         this.handleSelect = this.handleSelect.bind(this)
         this.searchsanpham = this.searchsanpham.bind(this)
         this.blurtimsp = this.blurtimsp.bind(this)
+        this.handleShowFormInfoProduct = this.handleShowFormInfoProduct.bind(this)
+        this.closeInfoProduct = this.closeInfoProduct.bind(this)
     }
 
     componentDidMount() {
@@ -159,14 +162,28 @@ export default class ProductPage extends Component {
             isShowSearch: true
         })
     }
+    handleShowFormInfoProduct(product) {
+        this.setState(
+            {
+                isShowInfoProduct: true
+            }
+        )
+    }
 
+    closeInfoProduct() {
+        this.setState(
+            {
+                isShowInfoProduct: false
+            }
+        )
+    }
     render() {
-        let { products, isShowAddCart, loaisp, tensp, isShowSearch } = this.state
-        let formaddcart, formsearch
+        let { products, isShowAddCart, loaisp, tensp, isShowSearch, isShowInfoProduct } = this.state
+        let formaddcart, formsearch, forminfoproduct
         console.log(products)
 
         let listProduct = products.map((product, index) => {
-            return <Item key={index} product={product} handleShowFormAddCart={this.handleShowFormAddCart} />
+            return <Item handleShowFormInfoProduct={this.handleShowFormInfoProduct} key={index} product={product} handleShowFormAddCart={this.handleShowFormAddCart} />
         })
         if (isShowAddCart === true) {
             formaddcart = <FormAddCart closeaddcart={this.closeaddcart} product={this.props.product} />
@@ -180,11 +197,15 @@ export default class ProductPage extends Component {
             }
             )
         }
+        if (isShowInfoProduct === true) {
+            forminfoproduct = <FormInfoProduct closeInfoProduct={this.closeInfoProduct} />
+        }
         return (<div>
 
             {/* Page Content */}
             <div className="page-heading products-heading header-text">
                 {formaddcart}
+                {forminfoproduct}
                 <div className="container">
                     <div className="row">
                         <div className="col-md-12">
@@ -279,6 +300,76 @@ class ItemSearch extends Component {
                 </div>
                 <div className="tensp">
                     <p>{this.props.item.TenSP}</p>
+                </div>
+            </div>
+        )
+    }
+}
+
+class FormInfoProduct extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            product: {},
+            tenloai: ""
+        }
+        this.closeInfoProduct = this.closeInfoProduct.bind(this)
+    }
+    closeInfoProduct() {
+        this.props.closeInfoProduct()
+    }
+    componentDidMount() {
+        axios({
+            method: 'GET',
+            url: `https://tttn.herokuapp.com/api/product/${localStorage.getItem('idsp')}`
+
+        }).then(response => {
+            this.setState({
+                product: response.data.productget
+            })
+            console.log(response.data.productget.loaisp)
+            axios({
+                method: 'GET',
+                url: `https://tttn.herokuapp.com/api/category/${response.data.productget.loaisp}`
+
+            }).then(response => {
+                this.setState({
+                    tenloai: response.data.categories.TenLoai
+                })
+            })
+
+        })
+
+    }
+    render() {
+        let { product, tenloai } = this.state
+        console.log(this.state)
+        return (
+            <div className='addCartOverlay'>
+                <div className="forminfoproduct">
+                    <div className="info__title">
+                        <h3>Thông tin sản phẩm</h3>
+                    </div>
+                    <div className="info__content">
+                        <div className="content__main">
+                            <div className="img">
+                                <img src={product.img}></img>
+                            </div>
+                            <div className="mainproduct">
+                                <p>Tên sách: {product.TenSP}</p>
+                                <p>Tác giả: {product.TacGia}</p>
+                                <p>Thể loại: {tenloai}</p>
+                            </div>
+                        </div>
+                        <div className="content_describe">
+                            <p>Mô tả: {product.Mota}</p>
+                        </div>
+
+
+                    </div>
+                    <div className="groupbtn">
+                        <button onClick={this.closeInfoProduct}><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" className="svg-inline--fa fa-times fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg></button>
+                    </div>
                 </div>
             </div>
         )

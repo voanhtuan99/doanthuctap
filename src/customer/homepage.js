@@ -227,7 +227,7 @@ class FormInfoProduct extends Component {
             console.log(response.data.productget.loaisp)
             axios({
                 method: 'GET',
-                url: `http://localhost:5000/api/category/${response.data.productget.loaisp}`
+                url: `https://tttn.herokuapp.com/api/category/${response.data.productget.loaisp}`
 
             }).then(response => {
                 this.setState({
@@ -261,6 +261,7 @@ class FormInfoProduct extends Component {
                         <div className="content_describe">
                             <p>Mô tả: {product.Mota}</p>
                         </div>
+
 
                     </div>
                     <div className="groupbtn">
