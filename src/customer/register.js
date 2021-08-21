@@ -10,7 +10,9 @@ class RegistPage extends Component {
             password: '',
             confirmpassword: '',
             sdt: '',
-            diachi: ''
+            diachi: '',
+            isShowFormMaXN: false,
+            maxn: ''
         }
         this.handleName = this.handleName.bind(this)
         this.handleEmail = this.handleEmail.bind(this)
@@ -20,6 +22,7 @@ class RegistPage extends Component {
         this.handleDiachi = this.handleDiachi.bind(this)
         this.addNewUser = this.addNewUser.bind(this)
         this.checkgmail = this.checkgmail.bind(this)
+        this.closeformmaxn = this.closeformmaxn.bind(this)
     }
     handleName(e) {
         this.setState({
@@ -88,7 +91,11 @@ class RegistPage extends Component {
             })
     }
 
-
+    closeformmaxn() {
+        this.setState({
+            isShowFormMaXN: false
+        })
+    }
 
     addNewUser() {
         var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -123,36 +130,56 @@ class RegistPage extends Component {
         }
         console.log(emailtrue)
         if (this.state.email !== "" && this.state.password !== "" &&
-            this.state.name !== "" && this.state.sdt !== "" && this.state.diachi !== "" && emailtrue === true) {
-            let user = {
-                email: this.state.email,
-                password: this.state.password,
-                name: this.state.name,
-                sdt: this.state.sdt,
-                diachi: this.state.diachi,
-                role: "customer"
-            }
+            this.state.name !== "" && this.state.sdt !== "" && this.state.diachi !== "" && emailtrue === true && this.state.password === this.state.confirmpassword) {
+            this.setState({
+                isShowFormMaXN: true
+            })
             axios({
                 method: "POST",
-                url: `https://tttn.herokuapp.com/api/auth/register`,
-                data: user
-            }).then(response => {
-                document.querySelector(".thanhcong").innerHTML = "<p>Đăng ký tài khoản thành công</p>"
+                url: `http://localhost:5000/api/select/otpUser`,
+                data: {
+                    email: this.state.email
+                }
             })
-                .catch(err => {
-                    document.querySelector(".thanhcong").innerHTML = "<p>Đăng ký tài khoản thất bại</p>"
+                .then(response => {
+                    console.log(response.data)
+                    this.setState({
+                        maxn: response.data.otp
+                    })
                 })
+            // .then(response => {
+            //     document.querySelector(".thanhcong").innerHTML = "<p>Đăng ký tài khoản thành công</p>"
+            // })
+            //     .catch(err => {
+            //         document.querySelector(".thanhcong").innerHTML = "<p>Đăng ký tài khoản thất bại</p>"
+            //     })
         }
     }
 
-    render() {
-        return (<div>
 
+    render() {
+        let { isShowFormMaXN, maxn } = this.state
+        let formmaxn
+        let user = {
+            email: this.state.email,
+            password: this.state.password,
+            name: this.state.name,
+            sdt: this.state.sdt,
+            diachi: this.state.diachi,
+            role: "customer"
+        }
+        if (isShowFormMaXN === true) {
+            formmaxn = <FormMaXN user={user} closeformmaxn={this.closeformmaxn} maxn={maxn} />
+        }
+        return (<div>
+            {formmaxn}
             <div className="dangnhap" style={{ backgroundImage: 'url(https://th.bing.com/th/id/R.f152a1b6f46ed3c3674c06a9ece41d75?rik=RoGmxivfdqXbXA&riu=http%3a%2f%2ffile.vforum.vn%2fhinh%2f2018%2f03%2fhinh-anh-hinh-nen-quyen-sach-dep-nhat-8.png&ehk=rQSvveJtmWrIU1S%2bpXPDtfrrWR1NjQdfwerKsUAqArs%3d&risl=&pid=ImgRaw)' }}>
+
                 <div className="dangky">
                     <div className="form__title">
                         <h3>Register</h3>
                     </div>
+
                     <div className="form__input">
                         <input type="text" placeholder="Email" onChange={this.handleEmail} onBlur={this.checkgmail} value={this.state.email} />
                         <div className="form__icon">
@@ -233,4 +260,68 @@ class RegistPage extends Component {
     }
 }
 
+
+class FormMaXN extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            input: ''
+        }
+        this.closeformmaxn = this.closeformmaxn.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+        this.taotaikhoan = this.taotaikhoan.bind(this)
+    }
+
+    closeformmaxn() {
+        this.props.closeformmaxn()
+    }
+
+    taotaikhoan() {
+        if (this.state.input.toString() === this.props.maxn.toString()) {
+            console.log(this.props.user)
+            axios({
+                method: "POST",
+                url: `http://localhost:5000/api/auth/register`,
+                data: this.props.user
+            })
+                .then(response => {
+                    console.log(this.props.user)
+                    setTimeout(() => {
+                        this.props.closeformmaxn()
+                        document.querySelector(".thanhcong").innerHTML = "<p>Đăng ký tài khoản thành công</p>"
+                    }, 700)
+                })
+                .catch(err => {
+                    document.querySelector(".thanhcong").innerHTML = "<p>Đăng ký tài khoản thất bại</p>"
+                })
+        }
+        else document.querySelector(".saimxn").innerHTML = "<p>Mã xác nhận không khớp</p>"
+    }
+
+    handleChange(e) {
+        this.setState({
+            input: e.target.value
+        })
+    }
+    render() {
+        console.log(this.props.user)
+        console.log(this.props.maxn)
+        console.log(this.state.input)
+
+
+        return (
+            <div className="addProductoverlay">
+                <div className="formxacnhantk">
+                    <h3>Nhập mã xác nhận</h3>
+                    <input type="text" placeholder="Mời nhập mã xác nhận" onChange={this.handleChange} />
+                    <div className="err saimxn"><br /></div>
+                    <div className="groupbtn">
+                        <button onClick={this.taotaikhoan}>Xác nhận</button>
+                        <button onClick={this.closeformmaxn}>Thoát</button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+}
 export default RegistPage

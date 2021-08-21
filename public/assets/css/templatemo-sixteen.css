@@ -1183,6 +1183,7 @@ footer .inner-content p a {
 .form__title{
     display: flex;
     margin: 20px auto;
+	justify-content: center;
 }
 .form__title h3{
     margin-top: 20px;
@@ -2164,7 +2165,7 @@ footer .inner-content p a {
 	display: flex;
 	font-family: Helvetica, Arial, Tahoma, sans-serif;
 	border-top-left-radius: 10px;
-	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
 
 }
 
@@ -5411,4 +5412,68 @@ display: flex;
     border-radius: 10px;
     background: rgb(92, 238, 248);
 
+}
+
+.formxacnhantk {
+	display: flex;
+	margin: auto;
+	flex-direction: column;
+	justify-content: center;
+	text-align: center;
+	width: 300px;
+	height: 200px;
+	background-color: #fff;
+	border-radius: 7px;
+	box-shadow: 1px 2px rgba(0, 0, 0, 0.3);
+	animation: appear1 linear 0.4s;
+}
+
+.formxacnhantk h3{
+	text-align: center;
+	font-family: monospace;
+	color:rgb(253, 169, 90);
+}
+
+.formxacnhantk input {
+	height: 30px;
+	margin: 30px;
+	border:solid 1px rgb(255, 168, 87);
+	outline: none;
+
+}
+
+.formxacnhantk input:focus {
+	outline: solid 3px rgb(255, 168, 87);
+}
+
+.formxacnhantk button {
+	width: 80px;
+	height: 30px;
+	margin: 20px 10px;
+	font-family: monospace;
+	color: #fff;
+	transition: all linear 0.3s;
+}
+
+.formxacnhantk button:first-child {
+	border: solid 2px rgb(253, 168, 99);
+	box-shadow: inset 0 0 0 0 #fff;
+	background-color: rgb(253, 168, 99);
+}
+
+.formxacnhantk button:last-child {
+	border: solid 2px #000;
+	box-shadow: inset 0 0 0 0 #fff;
+	background-color: #000;
+
+}
+
+.formxacnhantk button:first-child:hover {
+	box-shadow: inset 80px 0 0 0 #fff;
+	color: rgb(253, 168, 99);
+}
+
+.formxacnhantk button:last-child:hover {
+	box-shadow: inset 80px 0 0 0 #fff;
+	color: #000;
 }
