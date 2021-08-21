@@ -19,6 +19,7 @@ class RegistPage extends Component {
         this.handleSdt = this.handleSdt.bind(this)
         this.handleDiachi = this.handleDiachi.bind(this)
         this.addNewUser = this.addNewUser.bind(this)
+        this.checkgmail = this.checkgmail.bind(this)
     }
     handleName(e) {
         this.setState({
@@ -56,6 +57,8 @@ class RegistPage extends Component {
         })
     }
 
+
+
     handleDiachi(e) {
         this.setState({
             diachi: e.target.value
@@ -68,9 +71,31 @@ class RegistPage extends Component {
         })
     }
 
+    checkgmail() {
+
+        axios({
+            method: "POST",
+            url: `http://localhost:5000/api/auth/kiemtragmail`,
+            data: {
+                email: this.state.email
+            }
+        })
+            .then(response => {
+                document.querySelector(".gmailerr").innerHTML = "<br/>"
+            })
+            .catch((err) => {
+                document.querySelector(".gmailerr").innerHTML = "<p>Email đã tồn tại</p>"
+            })
+    }
+
 
 
     addNewUser() {
+        var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        let checktrueemail = regex.test(this.state.email) ? undefined : "0email";
+        let emailtrue = true
+
+        console.log(checktrueemail)
         if (this.state.password !== this.state.confirmpassword) {
             document.querySelector(".confirmerr").innerHTML = "<p>Mật khẩu xác nhận không khớp</p>"
         }
@@ -92,8 +117,13 @@ class RegistPage extends Component {
         if (this.state.diachi === '') {
             document.querySelector(".diachierr").innerHTML = "<p>Vui lòng điền số địa chỉ</p>"
         }
+        if (checktrueemail === "0email") {
+            emailtrue = false;
+            document.querySelector(".gmailerr").innerHTML = "<p>Email không hợp lệ</p>"
+        }
+        console.log(emailtrue)
         if (this.state.email !== "" && this.state.password !== "" &&
-            this.state.name !== "" && this.state.sdt !== "" && this.state.diachi !== "") {
+            this.state.name !== "" && this.state.sdt !== "" && this.state.diachi !== "" && emailtrue === true) {
             let user = {
                 email: this.state.email,
                 password: this.state.password,
@@ -124,7 +154,7 @@ class RegistPage extends Component {
                         <h3>Register</h3>
                     </div>
                     <div className="form__input">
-                        <input type="text" placeholder="Email" onChange={this.handleEmail} value={this.state.email} />
+                        <input type="text" placeholder="Email" onChange={this.handleEmail} onBlur={this.checkgmail} value={this.state.email} />
                         <div className="form__icon">
                             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="user" className="svg-inline--fa fa-user fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                                 <path fill="currentColor" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z">
