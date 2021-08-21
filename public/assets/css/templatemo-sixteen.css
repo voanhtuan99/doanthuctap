@@ -2907,12 +2907,8 @@ footer .inner-content p a {
 }
 
 
-.Successful .groupbtn__success a{
-	margin: auto;
-	display: flex;
-}
 
-.Successful .groupbtn__success a button{
+.Successful .groupbtn__success button{
 	margin: auto;
 	width: 100px;
 	height: 30px;
@@ -2922,7 +2918,7 @@ footer .inner-content p a {
 	transition: all 0.2s;
 }
 
-.Successful .groupbtn__success a button:hover{
+.Successful .groupbtn__success button:hover{
 	color: #000;
 	box-shadow: inset 100px 0 0 0 rgb(240, 233, 233);
 }
@@ -5365,7 +5361,7 @@ display: flex;
 
 .forminfoproduct .info__content .content_describe p {
 	width: 96%;
-	height: 100%;
+	height: 275;
 	line-height: 25px;
 	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 	color: rgb(66, 65, 63);
