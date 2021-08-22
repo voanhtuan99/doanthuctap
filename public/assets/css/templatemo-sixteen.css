@@ -2939,6 +2939,9 @@ footer .inner-content p a {
 	left: 0;
 	background-color: rgba(0,0,0,.1);
 	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-items: center;
 }
 
 .formAddCarrt{

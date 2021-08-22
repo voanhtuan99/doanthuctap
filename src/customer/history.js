@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Component } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default class HistoryPage extends Component {
     constructor(props) {
@@ -26,8 +27,10 @@ export default class HistoryPage extends Component {
         })
             .then(response => {
                 this.setState({
-                    orders: response.data.listDDH
+                    orders: response.data.listDDH,
                 })
+            })
+            .catch(err => {
             })
     }
 
@@ -125,7 +128,9 @@ export default class HistoryPage extends Component {
         if (isShowCancelOrder === true) {
             formcancel = <FormCancanOrder huydonhang={this.huydonhang} handleclosecancelform={this.handleclosecancelform} />
         }
+
         return (
+
             <div className="historybuypage">
                 {formcancel}
                 <div className="historypage__title">
@@ -139,6 +144,7 @@ export default class HistoryPage extends Component {
                     <li className="dahuy" onClick={() => this.clickOption("Đã hủy", "dahuy")}><p>Đã hủy</p></li>
                 </ul>
                 <div className="listorderinuser">
+
                     {listorder}
 
 
