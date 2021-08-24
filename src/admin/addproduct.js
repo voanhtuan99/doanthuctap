@@ -13,7 +13,7 @@ export default class AddProduct extends Component {
             Gia: '',
             SoLuong: '',
             KhuyenMai: '',
-            Loai: '',
+            Loai: '60fbecaf0a96e32480b86275',
             MoTa: '',
             TacGia: '',
             img: '',

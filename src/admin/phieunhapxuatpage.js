@@ -1,6 +1,8 @@
 import axios from "axios";
 import { Component } from "react";
 import { remove } from "lodash";
+import ClipLoader from "react-spinners/ClipLoader";
+
 export default class PhieuNhapXuatPage extends Component {
     constructor(props) {
         super(props)
@@ -10,7 +12,9 @@ export default class PhieuNhapXuatPage extends Component {
             isShowSelect: false,
             isShowInfoCou: false,
             isShowAddCT: false,
-            isShowAddPN: false
+            isShowAddPN: false,
+            loading1: true,
+            loading2: true
         }
         this.timcongty = this.timcongty.bind(this)
         this.handleShowSelect = this.handleShowSelect.bind(this)
@@ -70,7 +74,8 @@ export default class PhieuNhapXuatPage extends Component {
             }
         }).then(response => {
             this.setState({
-                coupons: response.data.listphieu
+                coupons: response.data.listphieu,
+                loading1: false
             })
         })
         axios({
@@ -81,7 +86,8 @@ export default class PhieuNhapXuatPage extends Component {
             }
         }).then(response => {
             this.setState({
-                companies: response.data.listCongty
+                companies: response.data.listCongty,
+                loading2: false
             })
         })
     }
@@ -156,7 +162,7 @@ export default class PhieuNhapXuatPage extends Component {
 
 
     render() {
-        let { companies, coupons, isShowSelect, isShowInfoCou, isShowAddCT, isShowAddPN } = this.state
+        let { companies, coupons, isShowSelect, isShowInfoCou, isShowAddCT, isShowAddPN, loading1, loading2 } = this.state
         let listcongty = companies.map((company, index) => {
             return <ItemCongTy congty={company} key={index} />
         })
@@ -224,9 +230,10 @@ export default class PhieuNhapXuatPage extends Component {
                             <li className="loaiphieu"><p>Loại phiếu</p></li>
                             <li className="chinhsua"><p>Chỉnh sửa</p></li>
                         </ul>
-                        <div className="listphieuall">
-                            {listphieu}
-                        </div>
+                        {loading1 ? (<ClipLoader size={30} color={"#F37A24"} loading={loading1} />) :
+                            <div className="listphieuall">
+                                {listphieu}
+                            </div>}
                     </div>
                     <div className="listcongty">
                         <ul className="column congty">
@@ -235,9 +242,10 @@ export default class PhieuNhapXuatPage extends Component {
                             <li className="diachi"><p>Địa chỉ</p></li>
 
                         </ul>
-                        <div className="listcongtyall">
-                            {listcongty}
-                        </div>
+                        {loading2 ? (<ClipLoader size={30} color={"#F37A24"} loading={loading2} />) :
+                            <div className="listcongtyall">
+                                {listcongty}
+                            </div>}
                     </div>
                 </div>
             </div>
@@ -340,7 +348,8 @@ class FormThongTinPhieu extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            details: []
+            details: [],
+            loading: true
         }
         this.thoatctphieu = this.thoatctphieu.bind(this)
     }
@@ -354,7 +363,8 @@ class FormThongTinPhieu extends Component {
             }
         }).then(response => {
             this.setState({
-                details: response.data.listCTPhieu
+                details: response.data.listCTPhieu,
+                loading: false
             })
         })
     }
@@ -382,47 +392,47 @@ class FormThongTinPhieu extends Component {
     }
 
     render() {
-        let { details } = this.state
+        let { details, loading } = this.state
         let listctphieu = details.map((ctphieu, index) => {
             return <ItemCTPhieu ctphieu={ctphieu} key={index} />
         })
         return (
             <div className="addProductoverlay">
-
-                <div className="formthongtinphieu">
-                    <div className="thongtinphieu__title">
-                        <div className="content">
-                            <h3>Thông tin phiếu:</h3>
-                            <h4>{sessionStorage.getItem("idphieu")}</h4>
-                        </div>
-                    </div>
-                    <div className="thongtinphieu__info">
-                        <div className="allcontent">
+                {loading ? (<ClipLoader size={30} color={"#F37A24"} loading={loading} />) :
+                    <div className="formthongtinphieu">
+                        <div className="thongtinphieu__title">
                             <div className="content">
-                                <p>Ngày tạo phiếu:</p>
-                                <span>{this.convertDate(sessionStorage.getItem("ngaylapphieu"))}</span>
-                            </div>
-                            <div className="content">
-                                <p>Công ty:</p>
-                                <span>{sessionStorage.getItem("tencongty")}</span>
+                                <h3>Thông tin phiếu:</h3>
+                                <h4>{sessionStorage.getItem("idphieu")}</h4>
                             </div>
                         </div>
-                    </div>
-                    <div className="listCTPhieu">
-                        <ul className="column">
-                            <li className="img"><p>Hình ảnh</p></li>
-                            <li className="tensp"><p>Tên sản phẩm</p></li>
-                            <li className="soluong"><p>Số lượng</p></li>
-                            <li className="gia"><p>Giá</p></li>
-                        </ul>
-                        <div className="listItemCTPhieu">
-                            {listctphieu}
+                        <div className="thongtinphieu__info">
+                            <div className="allcontent">
+                                <div className="content">
+                                    <p>Ngày tạo phiếu:</p>
+                                    <span>{this.convertDate(sessionStorage.getItem("ngaylapphieu"))}</span>
+                                </div>
+                                <div className="content">
+                                    <p>Công ty:</p>
+                                    <span>{sessionStorage.getItem("tencongty")}</span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div className="groupbtn">
-                        <button onClick={this.thoatctphieu}>Thoát</button>
-                    </div>
-                </div>
+                        <div className="listCTPhieu">
+                            <ul className="column">
+                                <li className="img"><p>Hình ảnh</p></li>
+                                <li className="tensp"><p>Tên sản phẩm</p></li>
+                                <li className="soluong"><p>Số lượng</p></li>
+                                <li className="gia"><p>Giá</p></li>
+                            </ul>
+                            <div className="listItemCTPhieu">
+                                {listctphieu}
+                            </div>
+                        </div>
+                        <div className="groupbtn">
+                            <button onClick={this.thoatctphieu}>Thoát</button>
+                        </div>
+                    </div>}
             </div>
         )
     }

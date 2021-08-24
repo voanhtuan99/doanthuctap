@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Component } from "react";
-
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default class UserPage extends Component {
     constructor(props) {
@@ -9,6 +9,7 @@ export default class UserPage extends Component {
             users: [],
             isShowFormAdd: false,
             isShowFormDel: false,
+            loading: true
         }
         this.showFormAdd = this.showFormAdd.bind(this)
         this.closeFormAdd = this.closeFormAdd.bind(this)
@@ -27,7 +28,8 @@ export default class UserPage extends Component {
 
         }).then(response => {
             this.setState({
-                users: response.data.Users
+                users: response.data.Users,
+                loading: false
             })
         })
         console.log('componentDidMount')
@@ -70,7 +72,7 @@ export default class UserPage extends Component {
     render() {
         console.log('render')
         let role = localStorage.getItem("role")
-        let { users } = this.state
+        let { users, loading } = this.state
         let listuser = users.map((user, index) => {
             return <User user={user} key={index} delUser={this.delUser} role={role}></User>
         })
@@ -139,10 +141,11 @@ export default class UserPage extends Component {
                         </li>
                         {grpbtn}
                     </ul>
-                    <div className="listuserall">
-                        {listuser}
+                    {loading ? (<ClipLoader size={30} color={"#F37A24"} loading={loading} />) :
+                        <div className="listuserall">
+                            {listuser}
 
-                    </div>
+                        </div>}
 
                 </div>
             </div>

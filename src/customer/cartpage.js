@@ -3,6 +3,7 @@ import { Component } from 'react'
 import ItemInCart from './itemincart'
 import FormSuccess from './formSuccess'
 import { remove } from 'lodash'
+import { withRouter } from 'react-router-dom'
 class CartPage extends Component {
   constructor(props) {
     let list = JSON.parse(sessionStorage.getItem('listproductincart'))
@@ -32,6 +33,7 @@ class CartPage extends Component {
     this.handleDiachitt = this.handleDiachitt.bind(this)
     this.xoasanpham = this.xoasanpham.bind(this)
     this.thaydoisoluong = this.thaydoisoluong.bind(this)
+    this.taodondathangonline = this.taodondathangonline.bind(this)
   }
 
   xoasanpham(product) {
@@ -132,6 +134,69 @@ class CartPage extends Component {
     }
   }
 
+  taodondathangonline() {
+    if (this.state.diachitt !== '') {
+      axios({
+        method: 'POST',
+        url: 'https://tttn.herokuapp.com/api/order/insert',
+        data: {
+          TrangThai: 'Thanh Toán Online',
+          user: localStorage.getItem('id'),
+          diachinhanhang: this.state.diachitt,
+          TongTien: this.state.TongTien
+        }
+      }).then(response => {
+        for (let i = 0; i < this.state.listproduct.length; i++) {
+          axios({
+            method: 'POST',
+            url: 'https://tttn.herokuapp.com/api/detailorder/insert',
+            data: {
+              SoLuong: this.state.listproduct[i].SoLuong,
+              idorder: response.data.newOrder._id,
+              idsp: this.state.listproduct[i]._id
+
+            }
+          }).then(require => {
+
+          })
+            .catch(err => {
+              alert(err)
+            })
+          axios({
+            method: 'PUT',
+            url: `https://tttn.herokuapp.com/api/product/${this.state.listproduct[i]._id}`,
+            data: {
+              TenSP: this.state.listproduct[i].TenSP,
+              SoLuong: this.state.listproduct[i].soluongtrongkho - this.state.listproduct[i].SoLuong,
+              DonGia: this.state.listproduct[i].DonGia,
+              KhuyenMai: this.state.listproduct[i].KhuyenMai,
+              Mota: this.state.listproduct[i].Mota,
+              img: this.state.listproduct[i].img,
+              TacGia: this.state.listproduct[i].TacGia,
+              loaisp: this.state.listproduct[i].loaisp
+            }
+          })
+            .then(response => {
+
+            })
+            .catch(err => {
+              alert(err)
+            })
+        }
+        sessionStorage.removeItem('listproductincart')
+        this.setState({
+          listproduct: []
+        })
+        window.location = "https://paypalprojectnode.herokuapp.com/"
+      }).catch(err => {
+        alert(`err123 ${err}`)
+      })
+    }
+    else {
+      document.querySelector('.err').innerHTML = "<p>Nhập địa chỉ</p>"
+    }
+  }
+
 
   ClickBackFormSuccess() {
     this.setState({
@@ -184,8 +249,9 @@ class CartPage extends Component {
           <input type="text" className="inputdiachinhanhang" onChange={this.handleDiachitt} value={this.state.diachitt} />
           <div className="err"><br></br></div>
         </div>
-        <div className="payment__button" onClick={this.taodondathang}>
-          <button>Thanh toán</button>
+        <div className="payment__button" >
+          <button onClick={this.taodondathang}>Thanh toán trực tiếp</button>
+          <button onClick={this.taodondathangonline}>Thanh toán online</button>
         </div>
       </div>
     }
@@ -227,4 +293,4 @@ class GioHangTrong extends Component {
 
 
 
-export default CartPage
+export default withRouter(CartPage)

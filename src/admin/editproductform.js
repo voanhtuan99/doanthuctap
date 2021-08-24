@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { Component } from 'react'
-import { Link } from 'react-router-dom'
 import { storage } from '../firebase/index'
+import ClipLoader from "react-spinners/ClipLoader";
+
 
 export default class EditProductForm extends Component {
     constructor(props) {
@@ -17,7 +18,8 @@ export default class EditProductForm extends Component {
             Loai: '',
             MoTa: '',
             TacGia: '',
-            img: ''
+            img: '',
+            loading: true
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleUpload = this.handleUpload.bind(this)
@@ -81,7 +83,8 @@ export default class EditProductForm extends Component {
                 Loai: response.data.productget.loaisp,
                 MoTa: response.data.productget.Mota,
                 TacGia: response.data.productget.TacGia,
-                img: response.data.productget.img
+                img: response.data.productget.img,
+                loading: false
             })
             console.log(response.data.productget)
         })
@@ -170,53 +173,56 @@ export default class EditProductForm extends Component {
         let types = this.state.LoaiSP.map((type, index) => {
             return <option value={type._id} key={index}>{type.TenLoai}</option>
         })
+        let { loading } = this.state
         return (
             <div className="editProductoverlay">
-                <div className="editProductForm">
-                    <div className="addproduct__title">
-                        <h3>Chỉnh sửa thông tin sản phẩm</h3>
-                    </div>
-                    <div className="infoaddproduct">
-                        <div className="addproduct__content">
-                            <div className="addproduct__row">
-                                <input type="text" className="addproduct__input" placeholder="Tên sản phẩm" onChange={this.handleChangeTenSP} value={this.state.TenSP} />
-                            </div>
-                            <div className="addproduct__row">
-                                <input type="text" className="addproduct__input" placeholder="Giá" onChange={this.handleChangeGia} value={this.state.Gia} />
-                            </div>
-                            <div className="addproduct__row">
-                                <input type="text" className="addproduct__input" placeholder="Số lượng" onChange={this.handleChangeSoLuong} value={this.state.SoLuong} />
-                            </div>
-                            <div className="addproduct__row">
-                                <input type="text" className="addproduct__input" placeholder="Khuyến mãi" onChange={this.handleChangeKhuyenMai} value={this.state.KhuyenMai} />
-                            </div>
-                            <div className="addproduct__row">
-                                <input type="text" className="addproduct__input" placeholder="Mô tả" onChange={this.handleChangeMoTa} value={this.state.MoTa} />
-                            </div>
-                            <div className="addproduct__row">
-                                <select id="typesinadd" onChange={this.handleChangeLoai}>
-                                    {types}
-                                </select>
-                            </div>
-                            <div className="addproduct__row">
-                                <input type="text" className="addproduct__input" placeholder="Tác giả" onChange={this.handleChangeTacGia} value={this.state.TacGia} />
-                            </div>
+                {loading ? (<ClipLoader size={30} color={"#F37A24"} loading={loading} />) :
 
+                    <div className="editProductForm">
+                        <div className="addproduct__title">
+                            <h3>Chỉnh sửa thông tin sản phẩm</h3>
                         </div>
-                        <div className="addProduct__img">
-                            <img src={this.state.img || "https://iweb.tatthanh.com.vn/pic/3/blog/images/logo-sach(77).jpg"} alt="firebase-image" />
+                        <div className="infoaddproduct">
+                            <div className="addproduct__content">
+                                <div className="addproduct__row">
+                                    <input type="text" className="addproduct__input" placeholder="Tên sản phẩm" onChange={this.handleChangeTenSP} value={this.state.TenSP} />
+                                </div>
+                                <div className="addproduct__row">
+                                    <input type="text" className="addproduct__input" placeholder="Giá" onChange={this.handleChangeGia} value={this.state.Gia} />
+                                </div>
+                                <div className="addproduct__row">
+                                    <input type="text" className="addproduct__input" placeholder="Số lượng" onChange={this.handleChangeSoLuong} value={this.state.SoLuong} />
+                                </div>
+                                <div className="addproduct__row">
+                                    <input type="text" className="addproduct__input" placeholder="Khuyến mãi" onChange={this.handleChangeKhuyenMai} value={this.state.KhuyenMai} />
+                                </div>
+                                <div className="addproduct__row">
+                                    <input type="text" className="addproduct__input" placeholder="Mô tả" onChange={this.handleChangeMoTa} value={this.state.MoTa} />
+                                </div>
+                                <div className="addproduct__row">
+                                    <select id="typesinadd" onChange={this.handleChangeLoai}>
+                                        {types}
+                                    </select>
+                                </div>
+                                <div className="addproduct__row">
+                                    <input type="text" className="addproduct__input" placeholder="Tác giả" onChange={this.handleChangeTacGia} value={this.state.TacGia} />
+                                </div>
 
-                            <div className="buttonaddimg">
-                                <input className="inputaddImg" type="file" onChange={this.handleChange} />
-                                <button onClick={this.handleUpload}>Upload</button>
+                            </div>
+                            <div className="addProduct__img">
+                                <img src={this.state.img || "https://iweb.tatthanh.com.vn/pic/3/blog/images/logo-sach(77).jpg"} alt="firebase-image" />
+
+                                <div className="buttonaddimg">
+                                    <input className="inputaddImg" type="file" onChange={this.handleChange} />
+                                    <button onClick={this.handleUpload}>Upload</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="addproduct__btn">
-                        <button className="btnThem" onClick={this.editProduct}>Update</button>
-                        <button className="btnThoat" onClick={this.handleCloseEditproduct}>Thoát</button>
-                    </div>
-                </div>
+                        <div className="addproduct__btn">
+                            <button className="btnThem" onClick={this.editProduct}>Update</button>
+                            <button className="btnThoat" onClick={this.handleCloseEditproduct}>Thoát</button>
+                        </div>
+                    </div>}
             </div>
         );
     }

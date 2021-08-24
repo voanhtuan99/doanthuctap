@@ -140,7 +140,7 @@ export default class HistoryPage extends Component {
                     <li className="tatca active" onClick={() => this.clickOption("all", "tatca")}><p>Tất cả</p></li>
                     <li className="choxacnhan " onClick={() => this.clickOption("Chưa xác nhận", "choxacnhan")}><p>Chờ xác nhận</p></li>
                     <li className="danggiao" onClick={() => this.clickOption("Đã xác nhận", "danggiao")}><p>Đang giao</p></li>
-                    <li className="dagiao" onClick={() => this.clickOption("Đã nhận", "dagiao")}><p>Đã giao</p></li>
+                    <li className="dagiao" onClick={() => this.clickOption("Đã thanh toán", "dagiao")}><p>Đã giao</p></li>
                     <li className="dahuy" onClick={() => this.clickOption("Đã hủy", "dahuy")}><p>Đã hủy</p></li>
                 </ul>
                 <div className="listorderinuser">
@@ -195,10 +195,24 @@ class ItemOrder extends Component {
                 <button onClick={this.huydonhang}>Huỷ đơn hàng</button>
             </div>
         }
+        let columntrangthai
+        if (this.props.order.TrangThai === 'Chưa xác nhận' || this.props.order.TrangThai === 'Thanh Toán Online') {
+            columntrangthai = <h3 className="green">{this.props.order.TrangThai}</h3>
+        }
+        else if (this.props.order.TrangThai === "Đã xác nhận") {
+            columntrangthai = <h3 className="blue">Đang giao</h3>
+
+        }
+        else if (this.props.order.TrangThai === "Đã thanh toán") {
+            columntrangthai = <h3 className="orange">{this.props.order.TrangThai}</h3>
+        }
+        else if (this.props.order.TrangThai === "Đã hủy") {
+            columntrangthai = <h3 className="brown">{this.props.order.TrangThai}</h3>
+        }
         return (
             <div className="order__item">
                 <div className="item__title">
-                    <h3>{this.props.order.TrangThai}</h3>
+                    {columntrangthai}
                     <div className="line"></div>
                     <p>Giá: {this.props.order.TongTien}đ</p>
                 </div>

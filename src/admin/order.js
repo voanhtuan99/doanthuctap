@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Component } from "react";
+import ClipLoader from "react-spinners/ClipLoader";
 
 export default class OrderPage extends Component {
     constructor(props) {
@@ -8,7 +9,8 @@ export default class OrderPage extends Component {
             orders: [],
             xemctdonhang: false,
             isShowAcceptOrder: false,
-            isShowCancelOrder: false
+            isShowCancelOrder: false,
+            loading: true
         }
         this.xemformctdonhang = this.xemformctdonhang.bind(this)
         this.closeformctdonhang = this.closeformctdonhang.bind(this)
@@ -64,6 +66,22 @@ export default class OrderPage extends Component {
             }
         }).then(response => {
             this.setState({
+                orders: response.data.Orders,
+                loading: false
+            })
+        })
+
+    }
+
+    componentDidUpdate() {
+        axios({
+            method: "GET",
+            url: `https://tttn.herokuapp.com/api/order`,
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        }).then(response => {
+            this.setState({
                 orders: response.data.Orders
             })
         })
@@ -85,7 +103,7 @@ export default class OrderPage extends Component {
 
     render() {
 
-        let { orders, xemctdonhang, isShowAcceptOrder, isShowCancelOrder } = this.state
+        let { orders, xemctdonhang, isShowAcceptOrder, isShowCancelOrder, loading } = this.state
         let listorder = orders.map((order, index) => {
             return <Item order={order} key={index}
                 xemformctdonhang={this.xemformctdonhang}
@@ -147,10 +165,11 @@ export default class OrderPage extends Component {
                         <li className="trangthai"><p>Trạng thái</p></li>
                         <li className="chinhsua"><p>Chỉnh sửa</p></li>
                     </ul>
-                    <div className="listuserall">
-                        {listorder}
+                    {loading ? (<ClipLoader size={30} color={"#F37A24"} loading={loading} />) :
+                        <div className="listuserall">
+                            {listorder}
 
-                    </div>
+                        </div>}
                 </div>
             </div>
         )
@@ -209,12 +228,12 @@ class Item extends Component {
     render() {
         let { order } = this.props
         let columntrangthai, btnxacnhan
-        if (order.TrangThai === 'Chưa xác nhận') {
+        if (order.TrangThai === 'Chưa xác nhận' || order.TrangThai === 'Thanh Toán Online') {
             btnxacnhan = <p onClick={this.handleShowAcceptorder}><span>Xác nhận</span></p>
             columntrangthai = <li className="trangthai "><span className='green'>{this.props.order.TrangThai}</span></li>
         }
         else if (order.TrangThai === "Đã xác nhận") {
-            columntrangthai = <li className="trangthai"><span className='blue'>{this.props.order.TrangThai}</span></li>
+            columntrangthai = <li className="trangthai"><span className='blue'>Đang vận chuyển</span></li>
             btnxacnhan = ''
 
         }
@@ -251,10 +270,12 @@ class FormDetailOrder extends Component {
             details: [],
             tenuser: '',
             ngaydat: sessionStorage.getItem('ngaydattemp'),
+            loading: true
 
         }
         this.closeformctdonhang = this.closeformctdonhang.bind(this)
         this.convertDate = this.convertDate.bind(this)
+        this.thanhtoandonhang = this.thanhtoandonhang.bind(this)
     }
 
     closeformctdonhang() {
@@ -279,7 +300,23 @@ class FormDetailOrder extends Component {
 
         return ngaynew;
     }
-
+    thanhtoandonhang() {
+        axios({
+            method: "PUT",
+            url: `https://tttn.herokuapp.com/api/order/${this.state.order._id}`,
+            data: {
+                TrangThai: "Đã thanh toán",
+                user: this.state.order.user,
+                diachinhanhang: this.state.order.diachinhanhang,
+                TongTien: this.state.order.TongTien,
+            }
+        }).then(response => {
+            console.log(response.data.updateOrder)
+            sessionStorage.removeItem("idorder")
+            sessionStorage.removeItem("userorder")
+            this.props.closeformctdonhang()
+        })
+    }
     componentDidMount() {
         axios({
             method: "GET",
@@ -289,7 +326,9 @@ class FormDetailOrder extends Component {
             }
         }).then(response => {
             this.setState({
-                details: response.data.listDetail
+                details: response.data.listDetail,
+                loading: false
+
             })
         })
         axios({
@@ -318,49 +357,55 @@ class FormDetailOrder extends Component {
 
 
     render() {
-        let { details } = this.state
+
+        let { details, order, loading } = this.state
         let listdetail = details.map((detail, index) => {
             return <ItemDetail detail={detail} key={index} />
         })
+        let btnChuyenDonHang
+        if (order.TrangThai === "Thanh Toán Online" || order.TrangThai === "Đã xác nhận") {
+            btnChuyenDonHang = <button onClick={this.thanhtoandonhang} >Chốt đơn hàng</button>
+        }
         return (
             <div className="addProductoverlay">
-                <div className="formDetailOrder">
-                    <div className="detailOrder__title">
-                        <div className="title">
-                            <h3>Chi tiết đơn hàng:</h3>
-                            <h4>{sessionStorage.getItem("idorder")}</h4>
+                {loading ? (<ClipLoader size={30} color={"#F37A24"} loading={loading} />) :
+                    <div className="formDetailOrder">
+                        <div className="detailOrder__title">
+                            <div className="title">
+                                <h3>Chi tiết đơn hàng:</h3>
+                                <h4>{sessionStorage.getItem("idorder")}</h4>
+                            </div>
                         </div>
-                    </div>
-                    <div className="orderInfo">
-                        <div className="nguoidat">
-                            <p>Người đặt: </p>
-                            <span>{this.state.tenuser}</span>
+                        <div className="orderInfo">
+                            <div className="nguoidat">
+                                <p>Người đặt: </p>
+                                <span>{this.state.tenuser}</span>
+                            </div>
+                            <div className="ngaydat">
+                                <p>Tổng tiền: </p>
+                                <span>{this.convertDate(this.state.ngaydat)}</span>
+                            </div>
+                            <div className="tongtien">
+                                <p>Tổng tiền: </p>
+                                <span>{this.state.order.TongTien}đ</span>
+                            </div>
                         </div>
-                        <div className="ngaydat">
-                            <p>Tổng tiền: </p>
-                            <span>{this.convertDate(this.state.ngaydat)}</span>
+                        <div className="listDetailOrder">
+                            <ul className="column">
+                                <li className="img"><p>Hình ảnh</p></li>
+                                <li className="tensp"><p>Tên sản phẩm</p></li>
+                                <li className="soluong"><p>Số lượng</p></li>
+                                <li className="gia"><p>Giá</p></li>
+                            </ul>
+                            <div className="listitem">
+                                {listdetail}
+                            </div>
                         </div>
-                        <div className="tongtien">
-                            <p>Tổng tiền: </p>
-                            <span>{this.state.order.TongTien}đ</span>
+                        <div className="groupbtn">
+                            {btnChuyenDonHang}
+                            <button onClick={this.closeformctdonhang}>Thoát</button>
                         </div>
-                    </div>
-                    <div className="listDetailOrder">
-                        <ul className="column">
-                            <li className="img"><p>Hình ảnh</p></li>
-                            <li className="tensp"><p>Tên sản phẩm</p></li>
-                            <li className="soluong"><p>Số lượng</p></li>
-                            <li className="gia"><p>Giá</p></li>
-                        </ul>
-                        <div className="listitem">
-                            {listdetail}
-                        </div>
-                    </div>
-                    <div className="groupbtn">
-                        <button>Xác nhận đơn hàng</button>
-                        <button onClick={this.closeformctdonhang}>Thoát</button>
-                    </div>
-                </div>
+                    </div>}
             </div>
         )
     }

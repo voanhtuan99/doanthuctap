@@ -27,6 +27,18 @@ export default class ProductPage extends Component {
 
     }
 
+
+    componentDidUpdate() {
+        axios({
+            method: "GET",
+            url: "https://tttn.herokuapp.com/api/product/all"
+        }).then(response => {
+            this.setState({
+                products: response.data.products
+            })
+        })
+    }
+
     componentDidMount() {
         axios({
             method: "GET",
