@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Component } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default class OrderPage extends Component {
     constructor(props) {
         super(props)
@@ -96,6 +97,7 @@ export default class OrderPage extends Component {
                 arrOrder[key].TrangThai = ordernew.TrangThai
             }
         })
+
         this.setState({
             orders: arrOrder
         })
@@ -134,6 +136,7 @@ export default class OrderPage extends Component {
                 {formdetailorder}
                 {formacceptorder}
                 {formcancelorder}
+                <ToastContainer />
                 <ul className="productadmin__navbar">
                     <li className="navbar__item">
                         <div className="nav__iconList"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="book" className="svg-inline--fa fa-book fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -570,6 +573,15 @@ class FormAcceptOrder extends Component {
                     }
                 }
             }
+            toast.success(`Đã xác nhận đơn hàng ${this.state.order._id}`, {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
             setTimeout(() => {
                 this.props.handleCloseAcceptOrder()
             }, 700)
@@ -677,9 +689,18 @@ class FormCancelOrder extends Component {
             this.props.xacnhandonhang(response.data.updateOrder)
             sessionStorage.removeItem("idorder")
             sessionStorage.removeItem("userorder")
+            toast.success(`Đã hủy đơn hàng ${this.state.order._id}!`, {
+                position: "top-right",
+                autoClose: 1000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
             setTimeout(() => {
                 this.props.handleCloseCancelOrder()
-            }, 700)
+            }, 1000)
         })
     }
 

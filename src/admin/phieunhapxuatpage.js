@@ -2,7 +2,8 @@ import axios from "axios";
 import { Component } from "react";
 import { remove } from "lodash";
 import ClipLoader from "react-spinners/ClipLoader";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default class PhieuNhapXuatPage extends Component {
     constructor(props) {
         super(props)
@@ -63,6 +64,15 @@ export default class PhieuNhapXuatPage extends Component {
         this.setState({
             coupons: listph
         })
+        toast.success('Thêm phiếu nhập thành công!', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
     }
 
     componentDidMount() {
@@ -190,6 +200,7 @@ export default class PhieuNhapXuatPage extends Component {
                 {infocou}
                 {formaddcongty}
                 {formthempn}
+                <ToastContainer />
                 <ul className="productadmin__navbar">
                     <li className="navbar__item">
                         <div className="nav__iconList"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="book" className="svg-inline--fa fa-book fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -508,6 +519,15 @@ class FormAddCompany extends Component {
             }
         })
             .then(response => {
+                toast.success(`Thêm công ty thành công`, {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
                 setTimeout(() => {
                     this.props.themcongtymoi(response.data.newcongty)
                     this.props.closeformcongty()
@@ -658,7 +678,6 @@ class FormThemPN extends Component {
                     setTimeout(() => {
                         this.props.addcoupon(response.data.phieunhapnew)
                         this.props.closeformthempn()
-                        alert("Tạo phiếu nhập thành công")
                     }, 500)
                 })
         }
@@ -993,11 +1012,30 @@ class FormAddCTPN extends Component {
     adddetailtolist() {
         sessionStorage.removeItem("idsppn")
         if (this.state.gianhap > this.state.giagoc || this.state.gianhap === 0) {
-            alert("Giá gốc phải cao hơn giá nhập")
+            toast.error('Giá nhập phải nhỏ hơn giá gốc', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
         else {
             this.props.adddetailtolist(this.state)
+            toast.success(`Thêm ${this.state.tensp} thành công`, {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            this.props.closeadddetail()
         }
+
 
     }
 

@@ -2,8 +2,8 @@ import axios from 'axios'
 import { Component } from 'react'
 import { storage } from '../firebase/index'
 import ClipLoader from "react-spinners/ClipLoader";
-
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default class EditProductForm extends Component {
     constructor(props) {
         super(props)
@@ -162,9 +162,26 @@ export default class EditProductForm extends Component {
                 TacGia: this.state.TacGia
             },
         }).then(response => {
-            alert('Sửa thành công')
+            toast.success('Sửa sản phẩm thành công', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+
         }).catch(error => {
-            alert(error)
+            toast.error('Sửa sản phẩm thất bại', {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         })
     }
 
@@ -176,6 +193,7 @@ export default class EditProductForm extends Component {
         let { loading } = this.state
         return (
             <div className="editProductoverlay">
+                <ToastContainer />
                 {loading ? (<ClipLoader size={30} color={"#F37A24"} loading={loading} />) :
 
                     <div className="editProductForm">

@@ -4,6 +4,8 @@ import ItemInCart from './itemincart'
 import FormSuccess from './formSuccess'
 import { remove } from 'lodash'
 import { withRouter } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 class CartPage extends Component {
   constructor(props) {
     let list = JSON.parse(sessionStorage.getItem('listproductincart'))
@@ -41,6 +43,15 @@ class CartPage extends Component {
     remove(list, (item) => {
       return item._id === product._id
     })
+    toast.warn(`Đã xóa ${product.TenSP} khỏi giỏ hàng`, {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     this.setState({
       listproduct: list
     })
@@ -267,6 +278,8 @@ class CartPage extends Component {
     return (
       <div className="customercart">
         {formSuccess}
+        <ToastContainer />
+
         <div className="cart__box">
           <div className="customercart__title">
             <h3>Sản phẩm trong giỏ hàng</h3>

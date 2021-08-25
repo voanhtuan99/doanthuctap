@@ -2,6 +2,8 @@ import axios from "axios";
 import { Component } from "react";
 import { withRouter } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 class FormAddCart extends Component {
     constructor(props) {
         super(props)
@@ -47,16 +49,35 @@ class FormAddCart extends Component {
             for (let i = 0; i < list.length; i++) {
                 if (list[i]._id === product._id) {
                     check = true
+                    toast.error("Sản phẩm đã có trong giỏ hàng",
+                        {
+                            position: "top-right",
+                            autoClose: 1500,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                        })
                 }
             }
             if (check === false) {
                 list.push(product)
+                toast.success('Thêm vào giỏ hàng thành công!', {
+                    position: "top-right",
+                    autoClose: 1500,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
             }
 
             sessionStorage.setItem('listproductincart', JSON.stringify(list))
 
         }
-        this.props.closeaddcart()
+
 
     }
 
@@ -119,9 +140,9 @@ class FormAddCart extends Component {
         let giaban = parseInt(this.state.DonGia) - parseInt(this.state.DonGia * (this.state.KhuyenMai / 100))
         let { loading } = this.state
         return (<div className='addCartOverlay'>
+            <ToastContainer />
             {loading ? (<ClipLoader size={30} color={"#F37A24"} loading={loading} />) :
                 <div className="formAddCarrt">
-
                     <div className="addcart__title">
                         <h3>Thêm vào giỏ hàng</h3>
                         <div className="addcart__img"><img src={this.state.img} /></div>
