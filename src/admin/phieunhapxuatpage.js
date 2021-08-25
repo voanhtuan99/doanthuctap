@@ -15,7 +15,8 @@ export default class PhieuNhapXuatPage extends Component {
             isShowAddCT: false,
             isShowAddPN: false,
             loading1: true,
-            loading2: true
+            loading2: true,
+            isShowFormXoaPhieu: false
         }
         this.timcongty = this.timcongty.bind(this)
         this.handleShowSelect = this.handleShowSelect.bind(this)
@@ -28,6 +29,9 @@ export default class PhieuNhapXuatPage extends Component {
         this.closeformthempn = this.closeformthempn.bind(this)
         this.addcoupon = this.addcoupon.bind(this)
         this.locloaiphieu = this.locloaiphieu.bind(this)
+        this.showformxoaphieu = this.showformxoaphieu.bind(this)
+        this.closeformxoaphieu = this.closeformxoaphieu.bind(this)
+        this.xoaphieu = this.xoaphieu.bind(this)
     }
 
     handleShowSelect() {
@@ -40,6 +44,21 @@ export default class PhieuNhapXuatPage extends Component {
         this.setState({
             isShowAddPN: true
         })
+    }
+
+    xoaphieu() {
+        this.setState({
+            isShowFormXoaPhieu: false
+        })
+        toast.success('Xóa thành công', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
     }
 
     closeformthempn() {
@@ -75,6 +94,33 @@ export default class PhieuNhapXuatPage extends Component {
         });
     }
 
+    componentDidUpdate() {
+        axios({
+            method: "GET",
+            url: `https://tttn.herokuapp.com/api/phieuxuatnhap`,
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        }).then(response => {
+            this.setState({
+                coupons: response.data.listphieu,
+                loading1: false
+            })
+        })
+        axios({
+            method: "GET",
+            url: `https://tttn.herokuapp.com/api/congty`,
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        }).then(response => {
+            this.setState({
+                companies: response.data.listCongty,
+                loading2: false
+            })
+        })
+    }
+
     componentDidMount() {
         axios({
             method: "GET",
@@ -106,6 +152,7 @@ export default class PhieuNhapXuatPage extends Component {
         this.setState({
             isShowInfoCou: true
         })
+
     }
 
     thoatctphieu() {
@@ -123,6 +170,18 @@ export default class PhieuNhapXuatPage extends Component {
     closeformcongty() {
         this.setState({
             isShowAddCT: false
+        })
+    }
+
+    showformxoaphieu() {
+        this.setState({
+            isShowFormXoaPhieu: true
+        })
+    }
+
+    closeformxoaphieu() {
+        this.setState({
+            isShowFormXoaPhieu: false
         })
     }
 
@@ -172,14 +231,14 @@ export default class PhieuNhapXuatPage extends Component {
 
 
     render() {
-        let { companies, coupons, isShowSelect, isShowInfoCou, isShowAddCT, isShowAddPN, loading1, loading2 } = this.state
+        let { companies, coupons, isShowSelect, isShowInfoCou, isShowAddCT, isShowAddPN, loading1, loading2, isShowFormXoaPhieu } = this.state
         let listcongty = companies.map((company, index) => {
             return <ItemCongTy congty={company} key={index} />
         })
         let listphieu = coupons.map((coupon, index) => {
-            return <ItemPhieu xemctphieu={this.xemctphieu} phieu={coupon} key={index} tenct={this.timcongty(coupon.CongTy)} />
+            return <ItemPhieu xemctphieu={this.xemctphieu} phieu={coupon} key={index} tenct={this.timcongty(coupon.CongTy)} showformxoaphieu={this.showformxoaphieu} />
         })
-        let locphieu, infocou, formaddcongty, formthempn
+        let locphieu, infocou, formaddcongty, formthempn, formxoaphieu
         if (isShowSelect === true) {
             locphieu = <LocPhieu locloaiphieu={this.locloaiphieu} />
         } else locphieu = ''
@@ -195,11 +254,16 @@ export default class PhieuNhapXuatPage extends Component {
             formthempn = <FormThemPN closeformthempn={this.closeformthempn} addcoupon={this.addcoupon} />
         }
         else formthempn = ''
+        if (isShowFormXoaPhieu === true) {
+            formxoaphieu = <FormXoaPhieu closeformxoaphieu={this.closeformxoaphieu} xoaphieu={this.xoaphieu} />
+        }
+        else isShowFormXoaPhieu = ''
         return (
             <div className="listproductadmin showwithsidebar">
                 {infocou}
                 {formaddcongty}
                 {formthempn}
+                {formxoaphieu}
                 <ToastContainer />
                 <ul className="productadmin__navbar">
                     <li className="navbar__item">
@@ -264,6 +328,50 @@ export default class PhieuNhapXuatPage extends Component {
     }
 }
 
+class FormXoaPhieu extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+
+        }
+        this.closeformxoaphieu = this.closeformxoaphieu.bind(this)
+        this.xoaphieu = this.xoaphieu.bind(this)
+    }
+
+    xoaphieu() {
+        axios({
+            method: "DELETE",
+            url: `https://tttn.herokuapp.com/api/phieuxuatnhap/${sessionStorage.getItem('iddelphieu')}`,
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            },
+        })
+            .then(response => {
+                this.props.xoaphieu()
+            })
+    }
+
+    closeformxoaphieu() {
+        this.props.closeformxoaphieu()
+    }
+    render() {
+        return (
+            <div className="addProductoverlay">
+                <div className="deleteProductForm">
+                    <div className="editproduct__title">Bạn muốn xóa phiếu {sessionStorage.getItem('iddelphieu')} </div>
+                    <div className="editProduct__logo">
+                        <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="trash-alt" class="svg-inline--fa fa-trash-alt fa-w-14" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41 0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0 16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z"></path></svg></div>
+                    <div className="groupbtn">
+                        <button className='btn xoa' onClick={this.xoaphieu}>Đồng ý</button>
+                        <button className='btn thoat' onClick={this.closeformxoaphieu}>Thoát</button>
+                    </div>
+
+                </div>
+            </div>
+        )
+    }
+}
+
 class ItemPhieu extends Component {
     constructor(props) {
         super(props)
@@ -271,6 +379,7 @@ class ItemPhieu extends Component {
 
         }
         this.xemctphieu = this.xemctphieu.bind(this)
+        this.showformxoaphieu = this.showformxoaphieu.bind(this)
     }
     convertDate(ngaydat) {
         var ngay = ngaydat.split('')
@@ -294,6 +403,11 @@ class ItemPhieu extends Component {
         this.props.xemctphieu()
     }
 
+    showformxoaphieu() {
+        sessionStorage.setItem('iddelphieu', this.props.phieu._id)
+        this.props.showformxoaphieu()
+    }
+
     render() {
         return (
             <ul className="item phieu">
@@ -301,7 +415,7 @@ class ItemPhieu extends Component {
                 <li className="ngaynhap1"><p>{this.convertDate(this.props.phieu.NgayNhap)}</p></li>
                 <li className="loaiphieu1"><p>{this.props.phieu.LoaiPhieu}</p></li>
                 <li className="chinhsua1"><span onClick={this.xemctphieu}>Xem</span>
-                    <span>Xóa</span>
+                    <span onClick={this.showformxoaphieu}>Xóa</span>
                 </li>
             </ul>
         )

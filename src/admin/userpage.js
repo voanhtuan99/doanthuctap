@@ -74,7 +74,7 @@ export default class UserPage extends Component {
         let role = localStorage.getItem("role")
         let { users, loading } = this.state
         let listuser = users.map((user, index) => {
-            return <User user={user} key={index} delUser={this.delUser} role={role}></User>
+            return <User user={user} key={index} delUser={this.delUser} num={index} role={role}></User>
         })
 
         console.log(sessionStorage.getItem('iddeluser'))
@@ -120,7 +120,7 @@ export default class UserPage extends Component {
                     </div>
                 </div>
                 <div className="listUserTable">
-                    <ul className="column">
+                    <ul className="column namecol">
                         <li className="name">
                             <p>Họ Tên</p>
                         </li>
@@ -177,9 +177,14 @@ class User extends Component {
             </li>
         }
         else grpbtn = ''
+        let num
+        if (this.props.num % 2 === 0) {
+            num = 'chan'
+        }
+        else num = 'le'
         return (
             <div>
-                <ul className="column item">
+                <ul className="column item" id={num}>
                     <li className="name">
                         <p>{this.props.user.name}</p>
                     </li>

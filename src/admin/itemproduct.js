@@ -38,8 +38,13 @@ export default class ItemProduct extends Component {
     }
 
     render() {
+        let num
+        if (this.props.num % 2 === 0) {
+            num = 'chan'
+        }
+        else num = 'le'
         return (
-            <ul className="list__item">
+            <ul className="list__item" id={num}>
                 <li className="item__name">{this.props.product.TenSP}</li>
                 <li className="item__quantity"><p>{this.props.product.SoLuong}</p></li>
                 <li className="item__price"><p>{this.props.product.DonGia}</p></li>

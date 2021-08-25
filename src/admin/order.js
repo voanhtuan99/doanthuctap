@@ -145,20 +145,20 @@ export default class OrderPage extends Component {
                         <h3>Đơn đặt hàng</h3>
                     </li>
                 </ul>
-                <div className="groupbtnuserlist">
-                    {/* <div className="btnadduser">
+                {/* <div className="groupbtnuserlist">
+                    <div className="btnadduser">
                         <button>
                             <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="file-alt" className="svg-inline--fa fa-file-alt fa-w-12" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M288 248v28c0 6.6-5.4 12-12 12H108c-6.6 0-12-5.4-12-12v-28c0-6.6 5.4-12 12-12h168c6.6 0 12 5.4 12 12zm-12 72H108c-6.6 0-12 5.4-12 12v28c0 6.6 5.4 12 12 12h168c6.6 0 12-5.4 12-12v-28c0-6.6-5.4-12-12-12zm108-188.1V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V48C0 21.5 21.5 0 48 0h204.1C264.8 0 277 5.1 286 14.1L369.9 98c9 8.9 14.1 21.2 14.1 33.9zm-128-80V128h76.1L256 51.9zM336 464V176H232c-13.3 0-24-10.7-24-24V48H48v416h288z"></path></svg>
                             <p>+1 đơn hàng</p>
                         </button>
-                    </div> */}
+                    </div>
                     <div className="btnadduser">
                         <button>
                             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" className="svg-inline--fa fa-search fa-w-16" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>
                             <p>Tìm kiếm</p>
                         </button>
                     </div>
-                </div>
+                </div> */}
                 <div className="listUserTable">
                     <ul className="column order">
                         <li className="nguoidat"><p>ID người đặt</p></li>
@@ -230,22 +230,25 @@ class Item extends Component {
 
     render() {
         let { order } = this.props
-        let columntrangthai, btnxacnhan
+        let columntrangthai, btnxacnhan, btnhuy
         if (order.TrangThai === 'Chưa xác nhận' || order.TrangThai === 'Thanh Toán Online') {
-            btnxacnhan = <p onClick={this.handleShowAcceptorder}><span>Xác nhận</span></p>
+            btnxacnhan = <p onClick={this.handleShowAcceptorder} className="btnblue"><span >Xác nhận</span></p>
             columntrangthai = <li className="trangthai "><span className='green'>{this.props.order.TrangThai}</span></li>
+            btnhuy = <p onClick={this.huydonhang} className="btnbrown"><span >Hủy</span></p>
         }
         else if (order.TrangThai === "Đã xác nhận") {
             columntrangthai = <li className="trangthai"><span className='blue'>Đang vận chuyển</span></li>
             btnxacnhan = ''
-
+            btnhuy = <p onClick={this.huydonhang} className="btnbrown"><span >Hủy</span></p>
         }
         else if (order.TrangThai === "Đã thanh toán") {
             btnxacnhan = ''
+            btnhuy = <p onClick={this.huydonhang} className="btnbrown"><span >Hủy</span></p>
             columntrangthai = <li className="trangthai "><span className='orange'>{this.props.order.TrangThai}</span></li>
         }
         else if (order.TrangThai === "Đã hủy") {
             btnxacnhan = ''
+            btnhuy = ''
             columntrangthai = <li className="trangthai "><span className='brown'>{this.props.order.TrangThai}</span></li>
         }
         return (<div>
@@ -256,8 +259,8 @@ class Item extends Component {
                 <li className="tongtien"><p>{this.props.order.TongTien}</p></li>
                 {columntrangthai}
                 <li className="chinhsua">
-                    <p onClick={this.xemformctdonhang}><span>Xem</span></p>
-                    <p onClick={this.huydonhang}><span>Hủy</span></p>
+                    <p onClick={this.xemformctdonhang} className="btnorange"><span>Xem</span></p>
+                    {btnhuy}
                     {btnxacnhan}
                 </li>
             </ul>

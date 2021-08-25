@@ -283,6 +283,7 @@ header .navbar {
 	color: #fff;
 	transition: all 0.5s;
 	margin-top: 5px;
+	cursor: pointer;
 }
 .navbar .navbar-nav .nav-link:hover,
 .navbar .navbar-nav .active > .nav-link,
@@ -2232,7 +2233,7 @@ footer .inner-content p a {
 	max-width: 95%;
 	width: 1200px;
 	height: 600px;
-	background-color: rgba(184, 154, 154, 0.1);
+	background-color: rgba(184, 154, 154, 0.02);
 	border: 2px solid rgba(99, 95, 95, 0.14);
 	flex-direction: column;
 	border-radius: 12px;
@@ -2262,7 +2263,9 @@ footer .inner-content p a {
 	font-family: "Roboto Slab", serif;
 	font-size: 16px;
 	box-sizing: border-box;
-	background-color: #ccc9c9;
+	background-color: #7fb9fc;
+	align-items: center;
+	justify-content: center;
 }
 
 .list__namecolumn-item {
@@ -2271,9 +2274,18 @@ footer .inner-content p a {
 
 .listProduct .list__item {
 	display: flex;
-	height: 50px;
+	height: 70px;
 	line-height: 25px;
-	border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+	border-bottom: solid 1px rgba(5, 5, 5, 0.1);
+	margin-bottom: 0;
+}
+
+.listProduct #chan {
+	background-color: #fff;
+}
+
+.listProduct #le {
+	background-color: rgba(173, 252, 252, 0.3);
 }
 
 .listProduct {
@@ -2295,6 +2307,10 @@ footer .inner-content p a {
 
 .listProduct .list__item p {
 	margin: 0 auto;
+	color: rgb(90, 89, 89);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
+		"Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+	font-weight: 500;
 }
 
 .listProduct .item__price {
@@ -2354,6 +2370,9 @@ footer .inner-content p a {
 	margin: 5px auto;
 	height: 100%;
 	line-height: 100%;
+	font-family: monospace;
+	font-weight: 700;
+	color: rgb(245, 237, 237);
 }
 
 .item__edit {
@@ -2372,7 +2391,7 @@ footer .inner-content p a {
 
 .imgproduct img {
 	width: 50px;
-	height: 100%;
+	height: 65px;
 	margin: auto;
 }
 
@@ -2732,7 +2751,7 @@ footer .inner-content p a {
 	color: #a0e9fc;
 }
 
-.editProduct Link .delete svg:hover {
+.editProduct .delete svg:hover {
 	color: #fc0202;
 }
 
@@ -3170,13 +3189,15 @@ footer .inner-content p a {
 	display: flex;
 	width: 100%;
 	margin: 0;
-	height: 40px;
+	height: 50px;
 	background-color: rgba(82, 4, 82, 0.8);
-	border-top-left-radius: 12px;
-	border-top-right-radius: 12px;
 	border-bottom: solid 0.5px #fff;
 }
 
+.listUserTable .namecol {
+	border-top-left-radius: 12px;
+	border-top-right-radius: 12px;
+}
 .listUserTable .column .name {
 	width: 12%;
 	display: flex;
@@ -3212,8 +3233,15 @@ footer .inner-content p a {
 }
 
 .listUserTable .item {
-	background-color: #fff;
 	border: none;
+}
+
+.listUserTable #le {
+	background-color: rgba(233, 66, 248, 0.1);
+}
+
+.listUserTable #chan {
+	background-color: #fff;
 }
 
 .listUserTable .item p {
@@ -3332,8 +3360,17 @@ footer .inner-content p a {
 	font-family: monospace;
 }
 
-.listUserTable .orderitem .chinhsua p:hover {
-	background-color: rgba(0, 0, 0, 0.15);
+.listUserTable .orderitem .chinhsua .btnorange:hover {
+	background-color: rgba(250, 85, 44, 0.5);
+	color: rgb(87, 81, 81);
+}
+
+.listUserTable .orderitem .chinhsua .btnbrown:hover {
+	background-color: rgba(68, 10, 10, 0.5);
+	color: rgb(87, 81, 81);
+}
+.listUserTable .orderitem .chinhsua .btnblue:hover {
+	background-color: rgba(37, 204, 255, 0.5);
 	color: rgb(87, 81, 81);
 }
 
@@ -4719,7 +4756,7 @@ body::-webkit-scrollbar-thumb {
 
 .chart {
 	display: flex;
-	margin: 30px auto;
+	margin: 20px auto;
 	flex-direction: column;
 	box-shadow: rgba(0, 0, 0, 0.3);
 	border-radius: 10px;
@@ -4728,8 +4765,14 @@ body::-webkit-scrollbar-thumb {
 
 .listproductadmin .so1 {
 	width: 800px;
-	height: 500px;
+	height: 550px;
 }
+
+.listproductadmin .thongkethang {
+	width: 800px;
+	height: 100px;
+}
+
 .chart .title {
 	width: 100%;
 	height: 50px;
@@ -5380,4 +5423,66 @@ body::-webkit-scrollbar-thumb {
 .formxacnhantk button:last-child:hover {
 	box-shadow: inset 80px 0 0 0 #fff;
 	color: #000;
+}
+
+.nhapxuatthang {
+	height: 120px;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.nhapxuatthang .nhapxuatthang__title {
+	width: 100%;
+	height: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: monospace;
+	color: rgb(248, 164, 86);
+	font-weight: 500;
+}
+
+.nhapxuatthang .nhap,
+.xuat {
+	display: flex;
+	height: 40px;
+	align-items: center;
+	justify-content: center;
+}
+.nhapxuatthang div p {
+	width: 150px;
+	height: 100%;
+	color: #41b8fd;
+	font-family: monospace;
+	font-weight: 500;
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.nhapxuatthang div span {
+	width: 150px;
+	height: 100%;
+	color: #ff0808;
+	font-family: monospace;
+	font-weight: 500;
+	font-size: 14px;
+	display: flex;
+}
+.chart select {
+	width: 200px;
+	margin: auto;
+	height: 30px;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	border: solid 1px rgb(248, 152, 74);
+}
+
+.chart select:focus {
+	outline: solid 3px rgb(248, 152, 74);
 }

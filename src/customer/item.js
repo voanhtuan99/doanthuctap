@@ -42,8 +42,8 @@ class Item extends Component {
                         <h4>{this.props.product.TenSP}</h4>
                     </div>
                     <div className="giasp">
-                        <h6>${giamgia}</h6>
-                        <h5>${this.props.product.DonGia}</h5>
+                        <h6>{giamgia}đ</h6>
+                        <h5>${this.props.product.DonGia}đ</h5>
                     </div>
                     <p>{this.props.product.Mota}</p>
                 </div>
