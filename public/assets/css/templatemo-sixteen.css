@@ -1132,7 +1132,7 @@ footer .inner-content p a {
 
 .formdangnhap {
 	width: 550px;
-	height: 400px;
+	height: 420px;
 	background-color: rgba(10, 56, 56, 0.7);
 	margin: auto;
 	display: flex;
@@ -5370,7 +5370,7 @@ body::-webkit-scrollbar-thumb {
 	justify-content: center;
 	text-align: center;
 	width: 300px;
-	height: 200px;
+	height: 220px;
 	background-color: #fff;
 	border-radius: 7px;
 	box-shadow: 1px 2px rgba(0, 0, 0, 0.3);
@@ -5485,4 +5485,70 @@ body::-webkit-scrollbar-thumb {
 
 .chart select:focus {
 	outline: solid 3px rgb(248, 152, 74);
+}
+
+.formnhapmkmoi {
+	margin: auto;
+	width: 400px;
+	height: 270px;
+	background-color: #fff;
+	border-radius: 10px;
+	box-shadow: 1px 2px rgba(0, 0, 0, 0.1);
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+}
+
+.formnhapmkmoi h3 {
+	display: flex;
+	width: 100%;
+	height: 50px;
+	justify-content: center;
+	align-items: center;
+}
+
+.formnhapmkmoi input {
+	width: 300px;
+	height: 30px;
+	margin: 5px 20px;
+	border: solid 1px rgb(255, 167, 51);
+}
+.formnhapmkmoi input:focus {
+	outline: solid 3px rgb(255, 167, 51);
+}
+
+.formnhapmkmoi button {
+	width: 100px;
+	height: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 0 10px;
+	color: #fff;
+	border-radius: 2px;
+}
+.formnhapmkmoi button:first-child {
+	background-color: rgb(255, 167, 51);
+	border: solid 3px rgb(255, 167, 51);
+}
+
+.formnhapmkmoi button:last-child {
+	background-color: rgb(2, 2, 2);
+	border: solid 3px rgb(2, 2, 2);
+}
+
+.formnhapmkmoi button:first-child:hover {
+	background-color: #fff;
+	color: rgb(255, 167, 51);
+}
+
+.formnhapmkmoi button:last-child:hover {
+	background-color: #fff;
+	color: rgb(2, 2, 2);
+}
+.loaddoimk {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
