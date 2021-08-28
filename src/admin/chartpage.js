@@ -53,39 +53,49 @@ export default class ChartPage extends Component {
             })
     }
 
-    componentDidUpdate() {
-        var tomonth = new Date()
-        var d = tomonth.getMonth() + 1
-        axios({
-            method: "POST",
-            url: `https://tttn.herokuapp.com/api/select/top5sach`,
-            data: {
-                Thang: this.state.optionthang
-            }
-        })
-            .then(response => {
-                this.setState({
-                    data: response.data
-                })
-            })
+    componentDidUpdate(pP, pS) {
 
-        axios({
-            method: "POST",
-            url: `https://tttn.herokuapp.com/api/select/chartnhapxuat`,
-            data: {
-                Thang: this.state.optionthang
-            },
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            },
-        })
-            .then(response => {
-                this.setState({
-                    tongtiennhap: response.data.tongtiennhap,
-                    tongtienxuat: response.data.tongtienxuat
+        if (pS.optionthang !== this.state.optionthang) {
+            console.log(pS)
+            console.log(this.state)
 
-                })
+            var tomonth = new Date()
+            var d = tomonth.getMonth() + 1
+            axios({
+                method: "POST",
+                url: `https://tttn.herokuapp.com/api/select/top5sach`,
+                data: {
+                    Thang: this.state.optionthang
+                }
             })
+                .then(response => {
+                    if (response.data !== this.state.data) {
+                        this.setState({
+                            data: response.data
+                        })
+                    }
+                })
+
+            axios({
+                method: "POST",
+                url: `https://tttn.herokuapp.com/api/select/chartnhapxuat`,
+                data: {
+                    Thang: this.state.optionthang
+                },
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                },
+            })
+                .then(response => {
+                    if (response.data.tongtiennhap !== this.state.tongtiennhap || response.data.tongtienxuat !== this.state.tongtienxuat) {
+                        this.setState({
+                            tongtiennhap: response.data.tongtiennhap,
+                            tongtienxuat: response.data.tongtienxuat
+
+                        })
+                    }
+                })
+        }
     }
 
     handleThang(e) {

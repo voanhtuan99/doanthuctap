@@ -94,31 +94,34 @@ export default class PhieuNhapXuatPage extends Component {
         });
     }
 
-    componentDidUpdate() {
-        axios({
-            method: "GET",
-            url: `https://tttn.herokuapp.com/api/phieuxuatnhap`,
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            }
-        }).then(response => {
-            this.setState({
-                coupons: response.data.listphieu,
-                loading1: false
+    componentDidUpdate(pP, pS) {
+        if (JSON.stringify(pS) !== JSON.stringify(this.state)) {
+            console.log(pS)
+            axios({
+                method: "GET",
+                url: `https://tttn.herokuapp.com/api/phieuxuatnhap`,
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            }).then(response => {
+                this.setState({
+                    coupons: response.data.listphieu,
+                    loading1: false
+                })
             })
-        })
-        axios({
-            method: "GET",
-            url: `https://tttn.herokuapp.com/api/congty`,
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            }
-        }).then(response => {
-            this.setState({
-                companies: response.data.listCongty,
-                loading2: false
+            axios({
+                method: "GET",
+                url: `https://tttn.herokuapp.com/api/congty`,
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            }).then(response => {
+                this.setState({
+                    companies: response.data.listCongty,
+                    loading2: false
+                })
             })
-        })
+        }
     }
 
     componentDidMount() {

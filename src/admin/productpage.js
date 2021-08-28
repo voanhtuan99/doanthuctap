@@ -28,15 +28,20 @@ export default class ProductPage extends Component {
     }
 
 
-    componentDidUpdate() {
-        axios({
-            method: "GET",
-            url: "https://tttn.herokuapp.com/api/product/all"
-        }).then(response => {
-            this.setState({
-                products: response.data.products
+    componentDidUpdate(pP, pS) {
+        if (JSON.stringify(pS.products) !== JSON.stringify(this.state.products)) {
+            console.log(pS.products)
+            console.log(this.state.products)
+
+            axios({
+                method: "GET",
+                url: "https://tttn.herokuapp.com/api/product/all"
+            }).then(response => {
+                this.setState({
+                    products: response.data.products
+                })
             })
-        })
+        }
     }
 
     componentDidMount() {
@@ -106,9 +111,7 @@ export default class ProductPage extends Component {
     }
 
     render() {
-        console.log(this.state)
         let { products, isShowAddproduct, isShowEditproduct, isShowDelProduct } = this.state
-        console.log(products)
         let listproduct = products.map((product, index) => {
             return <ItemProduct product={product} key={index} num={index} handleShowEditproduct={this.handleShowEditproduct} handleShowDelProduct={this.handleShowDelProduct} />
         })
@@ -118,7 +121,6 @@ export default class ProductPage extends Component {
         }
         else categorypage = ''
         let accessToken = localStorage.getItem("accessToken")
-        console.log(`access: ${accessToken}`)
         let addproduct, editproduct, delproduct
         if (isShowAddproduct === true) {
             addproduct = <AddProduct handleCloseaddproduct={this.handleCloseaddproduct} addproducttolist={this.addproducttolist} />

@@ -59,6 +59,7 @@ export default class OrderPage extends Component {
     }
 
     componentDidMount() {
+
         axios({
             method: "GET",
             url: `https://tttn.herokuapp.com/api/order`,
@@ -72,21 +73,24 @@ export default class OrderPage extends Component {
             })
         })
 
+
     }
 
-    componentDidUpdate() {
-        axios({
-            method: "GET",
-            url: `https://tttn.herokuapp.com/api/order`,
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-            }
-        }).then(response => {
-            this.setState({
-                orders: response.data.Orders
+    componentDidUpdate(pP, pS) {
+        if (JSON.stringify(pS) !== JSON.stringify(this.state)) {
+            console.log(pS)
+            axios({
+                method: "GET",
+                url: `https://tttn.herokuapp.com/api/order`,
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            }).then(response => {
+                this.setState({
+                    orders: response.data.Orders
+                })
             })
-        })
-
+        }
     }
 
     xacnhandonhang(ordernew) {
@@ -130,7 +134,6 @@ export default class OrderPage extends Component {
                 handleCloseCancelOrder={this.handleCloseCancelOrder} />
         }
         else formcancelorder = ''
-        console.log(this.state.users)
         return (
             <div className="listproductadmin showwithsidebar">
                 {formdetailorder}
